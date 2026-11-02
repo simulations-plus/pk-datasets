@@ -60,7 +60,7 @@ Derived PK endpoints provided per case: **Cmax**, **Tmax**, **Thalf**,
 ## Provenance
 
 Concentration–time profiles were extracted from published figures using
-[PlotDigitizer](https://plotdigitizer.com), then manually curated curve by
+internal plot digitizer, then manually curated curve by
 curve. Bounds reflect what the original publication reported; absence of a
 bound means the source did not provide one, not that uncertainty is zero.
 
@@ -94,8 +94,8 @@ This project is licensed under the Creative Commons Attribution 4.0 Internationa
 
 [![CC BY 4.0][cc-by-shield]][cc-by]
 
-[cc-by]: http://creativecommons.org
-[cc-by-shield]: https://shields.io
+[cc-by]: https://creativecommons.org/licenses/by/4.0/
+[cc-by-shield]: https://licensebuttons.net/l/by/4.0/88x31.png
 
 ## Contact
 
