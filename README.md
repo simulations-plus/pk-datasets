@@ -90,9 +90,12 @@ If you use this dataset, please cite the preprint above. A BibTeX entry:
 
 ## License
 
-TBD
-<!-- Released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/),
-matching the license of the associated preprint. -->
+This project is licensed under the Creative Commons Attribution 4.0 International License - see the [LICENSE](LICENSE) file for details.
+
+[![CC BY 4.0][cc-by-shield]][cc-by]
+
+[cc-by]: http://creativecommons.org
+[cc-by-shield]: https://shields.io
 
 ## Contact
 
