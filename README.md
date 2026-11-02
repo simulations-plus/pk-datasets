@@ -16,22 +16,22 @@ described in:
 | | |
 |---|---|
 | Cases (compound × species × route × dose) | 180 |
-| Unique compounds | 76 |
-| Species | human, cynomolgus monkey (*Macaca fascicularis*), rhesus monkey (*Macaca mulatta*), dog, rat, mouse |
-| Routes | IV bolus, immediate-release tablet (IRT), immediate-release solution (IRS) |
+| Unique compound identifiers | 75 |
+| Species labels in the CSV | dog, human, monkey, mouse, rat |
+| Routes | intravenous (IV) , immediate-release tablet (IRT), immediate-release solution (IRS) |
 
-Each case carries a digitized mean concentration–time curve, upper/lower
-uncertainty bounds where the source reported them (SEM or 95% CI), a
-standardized chemical structure, and dose metadata. Fourteen cases are averaged
-across multiple independent studies.
+Each case contains digitized concentration–time observations, a SMILES
+structure, dose metadata, and upper/lower bounds where reported by the source.
 
 ## Repository structure
 
 ```
 .
 ├── README.md
+├── LICENSE
 └── data
-    └── Cptimecurves_machine_readable.csv
+  ├── Cptimecurves_machine_readable.csv
+  └── REFERENCES.md
 ```
 
 ## Data dictionary
@@ -40,29 +40,29 @@ Columns of `data/Cptimecurves_machine_readable.csv`:
 
 | Column | Description |
 |---|---|
-| `compound` | Compound name |
-| `SMILES` | Standardized chemical structure |
-| `replicate` | Replicate / source-study index within a case |
-| `species` | Species the profile was measured in |
-| `route` | Route of administration (IV, IRT, IRS) |
-| `dose` | Administered dose |
-| `ECCS_class` | Predicted Extended Clearance Classification System class |
-| `time` | Time after dose |
-| `concentration` | Mean plasma concentration |
-| `concentration_lower` / `concentration_upper` | Reported uncertainty bounds (SEM or 95% CI), where available |
+| `Compound` | Compound identifier |
+| `Smiles` | Compound structure in SMILES format |
+| `dose (mg)` / `dose (mg/kg)` | Administered dose in milligrams and milligrams per kilogram |
+| `route` | Route label (`iv`, `IRT`, or `IRS`) |
+| `species` | Species label; monkeys are grouped as `monkey` |
+| `Source` | Source label mapped to the full reference in [REFERENCES.md](data/REFERENCES.md) |
+| `Time (h)` | Time after dose in hours |
+| `ng/mL` | Plasma concentration in nanograms per milliliter |
+| `Replicate` | Replicate index within a case |
+| `lower bound` / `upper bound` | Concentration bounds in nanograms per milliliter, where available |
+| `ADMET_Risk` | ADMET risk field |
+| `ECCS_Class` | Extended Clearance Classification System class |
+| `RuleOf5`, `CyclPept_filter`, `Macrocycle`, `PROTAC_filter` | Compound classification or filter fields |
 
-Derived PK endpoints provided per case: **Cmax**, **Tmax**, **Thalf**,
-**AUCinf**, **AUCt**, **CL**, **Vd**, and **Fa**.
-
-> Check units in the file itself — they are carried alongside the values and
-> should not be assumed uniform across cases.
+This CSV contains concentration–time observations and metadata; derived PK
+endpoints such as **Cmax**, **Tmax**, **AUC**, **CL**, and **Vd** are not included.
 
 ## Provenance
 
-Concentration–time profiles were extracted from published figures using
-internal plot digitizer, then manually curated curve by
-curve. Bounds reflect what the original publication reported; absence of a
-bound means the source did not provide one, not that uncertainty is zero.
+Concentration–time profiles were extracted from published figures using an
+internal plot digitizer, then manually curated curve by curve. Bounds reflect
+what the original publication reported; absence of a bound means the source did
+not provide one, not that uncertainty is zero.
 
 ## Intended use
 
