@@ -42,14 +42,14 @@ Columns of `data/Cptimecurves_machine_readable.csv`:
 |---|---|
 | `Compound` | Compound identifier |
 | `Smiles` | Compound structure in SMILES format |
-| `dose (mg)` / `dose (mg/kg)` | Administered dose in milligrams and milligrams per kilogram |
-| `route` | Route label (`iv`, `IRT`, or `IRS`) |
-| `species` | Species label; monkeys are grouped as `monkey` |
+| `Dose (mg)` / `Dose (mg/kg)` | Administered dose in milligrams and milligrams per kilogram |
+| `Route` | Route label (`IV`, `IRT`, or `IRS`) |
+| `Species` | Species label (`dog`, `human`, `monkey`, `mouse`, `rat`); monkeys are grouped as `monkey` |
 | `Source` | Source label mapped to the full reference in [REFERENCES.md](data/REFERENCES.md) |
 | `Time (h)` | Time after dose in hours |
-| `ng/mL` | Plasma concentration in nanograms per milliliter |
+| `Concentration (ng/mL)` | Plasma concentration in nanograms per milliliter |
 | `Replicate` | Replicate index within a case |
-| `lower bound` / `upper bound` | Concentration bounds in nanograms per milliliter, where available |
+| `Lower bound` / `Upper bound` | Concentration bounds in nanograms per milliliter, where available |
 | `ADMET_Risk` | ADMET risk field |
 | `ECCS_Class` | Extended Clearance Classification System class |
 | `RuleOf5`, `CyclPept_filter`, `Macrocycle`, `PROTAC_filter` | Compound classification or filter fields |

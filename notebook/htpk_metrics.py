@@ -8,15 +8,20 @@ It reproduces the metric calculation of the original HTPK benchmark analysis:
    interval covered by *all* replicates, and averaged. Their bounds are combined
    pessimistically (lowest lower bound, highest upper bound).
 2. **Predicted curve on the measured grid.** The simulated curve is averaged in
-   1-minute bins (labelled by the bin start), truncated at the last measured time and
-   linearly interpolated onto the measured time points. Values beyond the last bin
-   are held constant. ``resample_minutes=None`` skips the binning (exact interpolation).
+   1-minute bins (labelled by the bin start); empty bins are filled by linear
+   interpolation between neighbouring non-empty bins (as pandas
+   ``resample().mean().interpolate()``), *then* the bin series is truncated at the last
+   bin label <= last measured time and linearly interpolated onto the measured time
+   points. Values beyond the last retained bin are held constant. Because filling
+   happens before truncation, an empty last bin may take its value from a later bin.
+   ``resample_minutes=None`` skips the binning (exact interpolation).
 3. **Error bounds (optional).** If a case has complete lower/upper bounds, a prediction
    outside ``[lower, upper]`` is compared with the violated bound instead of the
    measurement. With ``zero_error_within_bounds`` a prediction inside the bounds counts
-   as exact. If any bound of the case is missing, the plain comparison is used.
+   as exact. If any bound of the case (in any replicate) is missing, the plain
+   comparison is used.
 4. **Exclusion of ~zero values.** Points where the prediction or the observation is at
-   or below ``min_threshold`` are excluded (typically t = 0).
+   or below ``min_threshold`` are excluded (typically t = 0; negative values too).
 5. **Metrics.** Absolute, relative and log2-ratio errors; the main metric is the mean
    absolute log2 error (MAL2E): 1 = two-fold error on average.
 
@@ -119,10 +124,17 @@ def aggregate_replicates(replicates: list[pd.DataFrame]) -> Observed:
     def stack(col: str) -> np.ndarray:
         return np.vstack([_interp_valid(grid, r[TIME].to_numpy(float), r[col].to_numpy(float)) for r in replicates])
 
-    with warnings.catch_warnings():  # all-NaN bound columns are expected (no bounds)
+    # Bounds are only combined when every replicate has complete bounds; otherwise the
+    # missingness is kept (all NaN) so that the plain comparison is used for the case.
+    complete = all(r[LOWER].notna().all() and r[UPPER].notna().all() for r in replicates)
+    if complete:
+        lower, upper = stack(LOWER).min(axis=0), stack(UPPER).max(axis=0)
+    else:
+        lower = upper = np.full(len(grid), np.nan)
+    with warnings.catch_warnings():  # a time point without any finite measurement stays NaN
         warnings.simplefilter("ignore", category=RuntimeWarning)
-        return Observed(grid, np.nanmean(stack(CONC), axis=0),
-                        np.nanmin(stack(LOWER), axis=0), np.nanmax(stack(UPPER), axis=0))
+        conc = np.nanmean(stack(CONC), axis=0)
+    return Observed(grid, conc, lower, upper)
 
 
 # ------------------------------------------------------------------ predicted side
@@ -188,14 +200,14 @@ def timeseries_metrics(pred: np.ndarray, observed: Observed, settings: MetricSet
         raise ValueError("No valid data points")
 
     thr = settings.min_threshold
-    keep = (np.abs(pred) > thr) & (np.abs(obs) > thr)
+    keep = (pred > thr) & (obs > thr)  # also rejects nonphysical negative concentrations
     p, o = pred[keep], obs[keep]
     if len(p) == 0:
         raise ValueError("No valid data points after excluding zeros")
 
     err = p - o
     rel = err / o
-    log2 = np.log2(np.maximum(np.abs(p), thr) / np.maximum(np.abs(o), thr))
+    log2 = np.log2(p / o)
     corr = np.nan
     if len(p) > 1 and np.std(p) > 0 and np.std(o) > 0:
         corr = float(np.corrcoef(p, o)[0, 1])
