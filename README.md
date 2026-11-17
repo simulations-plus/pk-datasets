@@ -44,24 +44,22 @@ Columns of `data/Cptimecurves_machine_readable.csv`:
 | `Smiles` | Compound structure in SMILES format |
 | `Dose (mg)` / `Dose (mg/kg)` | Administered dose in milligrams and milligrams per kilogram |
 | `Route` | Route label (`IV`, `IRT`, or `IRS`) |
-| `Species` | Species label (`dog`, `human`, `monkey`, `mouse`, `rat`); monkeys are grouped as `monkey` |
+| `Species` | Species label (`dog`, `human`, `monkey`, `mouse`, `rat`); monkey is a combination of data from Macaca fascicularis and Macaca mulatta |
 | `Source` | Source label mapped to the full reference in [REFERENCES.md](data/REFERENCES.md) |
 | `Time (h)` | Time after dose in hours |
 | `Concentration (ng/mL)` | Plasma concentration in nanograms per milliliter |
 | `Replicate` | Replicate index within a case |
 | `Lower bound` / `Upper bound` | Concentration bounds in nanograms per milliliter, where available |
-| `ADMET_Risk` | ADMET risk field |
-| `ECCS_Class` | Extended Clearance Classification System class |
-| `RuleOf5`, `CyclPept_filter`, `Macrocycle`, `PROTAC_filter` | Compound classification or filter fields |
+| `ADMET_Risk` | ADMET risk score as calculated in ADMET Predictor v14|
+| `ECCS_Class` | Extended Clearance Classification System class as calculated in ADMET Predictor v14 |
+| `RuleOf5`, `CyclPept_filter`, `Macrocycle`, `PROTAC_filter` | Compound classification or filter fields as calculated in ADMET Predictor v14 |
 
 This CSV contains concentration–time observations and metadata; derived PK
 endpoints such as **Cmax**, **Tmax**, **AUC**, **CL**, and **Vd** are not included.
 
 ## Provenance
 
-Concentration–time profiles were extracted from published figures using an
-internal plot digitizer, then manually curated curve by curve. Bounds reflect
-what the original publication reported; absence of a bound means the source did
+Plots were digitized using PlotDigitizer (plotdigitizer.com), followed by manual review of all curves against the source publications by the researcher who performed the extraction. Times and concentrations were adjusted when necessary. Bounds reflect what the original publication reported; absence of a bound means the source did
 not provide one, not that uncertainty is zero.
 
 ## Intended use
